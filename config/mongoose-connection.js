@@ -1,10 +1,12 @@
 const mongoose=require("mongoose");
+const config =require("config");
+const dbgr = require("debug")("Development:mongoose");    // debug its an replacment for console log we can manage condsole.Logs only appear when = $env:DEBUG = "Development:*" & diappear= $env:DEBUG = ""  
 mongoose
-.connect("mongodb://127.0.0.1:27017/BagSpot")
+.connect(`${config.get("MONGODB_URI")}/BagSpot`)
 .then(function(){
-    console.log("Connected")    // after a connection
+    dbgr("Connected");    // after a connection
 })
 .catch(function(err){
-    console.log(err);          // err print 
+    dbgr(err);          // err print 
 })
-module.exports =mongoose.connection;
+module.exports=mongoose.connection;
