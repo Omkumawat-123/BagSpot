@@ -9,18 +9,19 @@ module.exports.registerUser= async function (req, res) {
         let { fullname, email, password } = req.body;
 
         let user= await userModel.findOne({email:email});
-        if (user) return res.status(401).send("You already Hvae an account, please login");           // check account if have then show msg otherwise create account 
+        // 1️⃣ Check if user already exists
+        if (user) return res.status(401).send("You already Hvae an account, please login");          
         bcrypt.genSalt(10, function (err, salt) {
             bcrypt.hash(password, salt, async function (err, hash) {
-                if (err) return res.send(err.message);                     // created hash 
+                if (err) return res.send(err.message);                   // 2️⃣ Generate hash for password
                 else {
                     let user = await userModel.create({
                         fullname,
-                        email,                                           // if user not create then create user
+                        email,                                             // 3️⃣ Create new user
                         password: hash,
                     })
-                    let token=generateToken(user);         // function call - generate token
-                 res.cookie("token",token);              // token are send in ragisterd users browser (cookie set )
+                    let token=generateToken(user);        // 4️⃣ Generate token - funcation ccall 
+                 res.cookie("token",token);              // 5️⃣ Send token as cookie ragisterd users browser (cookie set )
                  res.send("User created omya...")           
                 }
             });
@@ -35,18 +36,19 @@ module.exports.registerUser= async function (req, res) {
 
 module.exports.loginUser= async function (req, res) {
     let {email,password}=req.body;
+    // 1️⃣ Check if user already exists
     let user = await userModel.findOne({email:email});
     if (!user){ 
         return res.send("Email or Password incorrect");  // if user not registerd
     }
      
-    bcrypt.compare(password,user.password,function(err,result){
+    bcrypt.compare(password,user.password,function(err,result){   //cmpare pass with hash
         if (result){
-            let token =generateToken(user);
-            res.cookie("token", token); 
+            let token =generateToken(user);//  Generate token - funcation ccall 
+            res.cookie("token", token); //set cookie 
             res.send("You can login")         
         }else{
-            return res.send("Email or Password Incorrect");
+            return res.send("Email or Password Incorrect");     
         }
     });
 
