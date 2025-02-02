@@ -1,8 +1,31 @@
-const express= require("express");
-const router=express.Router();
+const express = require("express");
+const router = express.Router();
+const upload = require("../config/multer-config");
+const productModel = require("../models/product-model");
 
-router.get("/",function(req,res){
-    res.send("hii form products route");
+router.post("/create", upload.single("image"), async function (req, res) {
+    try {
+        let { image, name, price,discount, bgcolor,panelcolor,textcolor } = req.body;
+        let product = await productModel.create({
+           image:req.file.buffer,
+           image, 
+           name, 
+           price,
+           discount, 
+           bgcolor,
+           panelcolor,
+           textcolor,
+        });
+        req.flash("success","product created Successfully")
+        res.redirect("/owners/admin")
+    }
+    catch (err) {
+        res.send(err.message);
+    }
+
 });
 
-module.exports=router;
+
+
+
+module.exports = router;
