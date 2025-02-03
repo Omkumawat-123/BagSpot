@@ -2,6 +2,7 @@ const userModel = require("../models/user-model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const {generateToken}=require("../utils/generateToken");
+const flash=require("connect-flash");
 
 module.exports.registerUser= async function (req, res) {
 
@@ -39,17 +40,23 @@ module.exports.loginUser= async function (req, res) {
     // 1️⃣ Check if user already exists
     let user = await userModel.findOne({email:email});
     if (!user){ 
-        return res.send("Email or Password incorrect");  // if user not registerd
+        req.flash("error", "Email or Password Incorrect"); // Flash message for incorrect password
+        return res.redirect("/");   // if user not registerd
     }
      
     bcrypt.compare(password,user.password,function(err,result){   //cmpare pass with hash
         if (result){
             let token =generateToken(user);//  Generate token - funcation ccall 
             res.cookie("token", token); //set cookie 
-            res.send("You can login")         
+            res.redirect("/shop");         
         }else{
             return res.send("Email or Password Incorrect");     
         }
     });
 
+} 
+
+module.exports.logout= function (req,res){
+    res.cookie("token", "")
+    res.redirect("/") 
 }

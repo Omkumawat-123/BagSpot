@@ -1,50 +1,81 @@
 <%- include('./partials/header') %>
-    <div class="w-full h-screen flex items-start px-20 py-20">
-        <div class="w-[25%] flex h-screen flex-col items-start">
-            <div class="flex items-center gap-2">
-                <h3>sort by</h3>
-                <form action="/shop">
-                    <select class="border-[1px] px-2 py-1" name="sortby" id="">
-                        <option value="popular">Popular</option>
-                        <option value="newest">Newest</option>
-                    </select>
-                </form>
-            </div>
-            <div class="flex flex-col mt-20">
-                <a class="block w-fit mb-2" href="">New Collection</a>
-                <a class="block w-fit mb-2" href="">All Products</a>
-                <a class="block w-fit mb-2" href="">Discounted Products</a>
-            </div>
-            <div class="mt-32">
-                <a class="block w-fit mb-2" href="">Filter by :</a>
-                <a class="block w-fit mb-2" href="">Availability</a>
-                <a class="block w-fit mb-2" href="">Discount</a>
+
+<div class="w-full min-h-screen flex items-start px-6 py-16 bg-gray-50">
+
+    <!-- Sidebar Section -->
+    <div class="w-[20%] flex flex-col bg-white m-10 p-10 rounded-lg shadow-lg ">
+
+        <!-- Sort By Section -->
+        <div class="mb-8">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Sort By</h3>
+            <form action="/shop">
+                <select class="w-full p-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-gray-700 text-sm">
+                    <option value="popular">Popular</option>
+                    <option value="newest">Newest</option>
+                </select>
+            </form>
+        </div>
+    
+        <!-- Categories Section -->
+        <div class="mb-12">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Categories</h3>
+            <div class="space-y-4">
+                <a class="block text-lg font-medium text-gray-700 hover:text-indigo-600 transition-all" href="">New Collection</a>
+                <a class="block text-lg font-medium text-gray-700 hover:text-indigo-600 transition-all" href="">All Products</a>
+                <a class="block text-lg font-medium text-gray-700 hover:text-indigo-600 transition-all" href="">Discounted Products</a>
             </div>
         </div>
-        <div class="w-[75%] flex flex-col gap-5 h-screen">
-            <div class="flex items-start gap-5">
+    
+        <!-- Filters Section -->
+        <div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Filter By</h3>
+            <div class="space-y-4">
+                <a class="block text-lg font-medium text-gray-700 hover:text-indigo-600 transition-all" href="">Availability</a>
+                <a class="block text-lg font-medium text-gray-700 hover:text-indigo-600 transition-all" href="">Discount</a>
+            </div>
+        </div>
+    
+    </div>
+    
+
+    <!-- Product Listing Section -->
+    <div class="w-[75%] flex flex-col gap-6">
+        <% if (products && products.length > 0) { %>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 <% products.forEach(function(product){ %>
-                    <div class="w-60">
-                        <div class="w-full h-52 flex items-center justify-center bg-[<%= product.bgcolor %>]">
-                            <img class="h-[12rem]" src="data:image/jpeg;base64,<%= product.image.toString('base64') %>"
-                                alt="">
+                    <div class="w-full bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition duration-300">
+                        
+                        <!-- Product Image Section -->
+                        <div class="w-full h-56 flex items-center justify-center bg-[<%= product.bgcolor %>]">
+                            <% if (product.image) { %>
+                                <img class="h-full w-full object-cover" 
+                                     src="data:image/png;base64,<%= product.image.toString('base64') %>" 
+                                     alt="<%= product.name %>">
+                            <% } else { %>
+                                <p class="text-gray-400">No image available</p>
+                            <% } %>
                         </div>
-                        <div
-                            class="flex justify-between bg-[<%= product.panelcolor %>] items-center px-4 py-4 text-[<%= product.textcolor %>]">
+                        
+
+                        <!-- Product Info Section -->
+                        <div class="flex justify-between items-center px-6 py-4 bg-[<%= product.panelcolor %>] text-[<%= product.textcolor %>]">
                             <div>
-                                <h3>
-                                    <%= product.name %>
-                                </h3>
-                                <h4>₹ <%= product.price %>
-                                </h4>
+                                <h3 class="text-xl font-semibold"><%= product.name %></h3>
+                                <h4 class="text-lg font-medium">₹ <%= product.price %></h4>
                             </div>
-                            <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="">
+                            <a href="" class="w-10 h-10 flex items-center justify-center rounded-full bg-indigo-600 text-white hover:bg-indigo-500 transition-all">
                                 <i class="ri-add-line"></i>
                             </a>
                         </div>
+
                     </div>
-                    <% }) %>
+                <% }); %>
             </div>
-        </div>
+        <% } else { %>
+            <p class="text-center text-gray-500 text-xl">No products available at the moment.</p>
+        <% } %>
     </div>
-    <%- include('./partials/footer') %>
+
+</div>
+
+<%- include('./partials/footer') %>

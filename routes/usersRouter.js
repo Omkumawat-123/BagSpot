@@ -7,12 +7,18 @@ const jwt = require("jsonwebtoken");
 const {generateToken}=require("../utils/generateToken");
 const {registerUser}=require("../controllers/authControllers");
 const {loginUser}=require("../controllers/authControllers");
+const {logout}=require("../controllers/authControllers");
+const isLoggedIn=require("../middlewares/isLoggedIn")
+
 
 router.get("/", function (req, res) {
     res.send("hiiform users route");
 });
 
 router.post("/register", registerUser );   //registerUser is function is define in authcontroller 
-router.post("/login", loginUser); 
+router.post("/login",loginUser); 
+router.get("/logout",logout); 
+ 
+
 
 module.exports=router;
