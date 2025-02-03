@@ -46,6 +46,11 @@ router.get("/AddToCart/:productid", isLoggedIn, async function (req, res) {
     }
 });
 
+router.get("/cart", function (req, res) {
+    let success=req.flash("success")
+    res.render("cart");
+});
+
 
  
 
