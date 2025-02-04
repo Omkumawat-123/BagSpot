@@ -15,34 +15,35 @@
     <div class="w-[20%] flex flex-col bg-white m-10 p-10 rounded-lg shadow-lg ">
 
         <!-- Sort By Section -->
-        <div class="mb-8">
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">Sort By</h3>
-            <form action="/shop">
-                <select class="w-full p-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-gray-700 text-sm">
-                    <option value="popular">Popular</option>
-                    <option value="newest">Newest</option>
-                </select>
-            </form>
-        </div>
-    
-        <!-- Categories Section -->
-        <div class="mb-12">
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">Categories</h3>
-            <div class="space-y-4">
-                <a class="block text-lg font-medium text-gray-700 hover:text-indigo-600 transition-all" href="">New Collection</a>
-                <a class="block text-lg font-medium text-gray-700 hover:text-indigo-600 transition-all" href="">All Products</a>
-                <a class="block text-lg font-medium text-gray-700 hover:text-indigo-600 transition-all" href="">Discounted Products</a>
-            </div>
-        </div>
-    
-        <!-- Filters Section -->
-        <div>
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">Filter By</h3>
-            <div class="space-y-4">
-                <a class="block text-lg font-medium text-gray-700 hover:text-indigo-600 transition-all" href="">Availability</a>
-                <a class="block text-lg font-medium text-gray-700 hover:text-indigo-600 transition-all" href="">Discount</a>
-            </div>
-        </div>
+<div class="mb-8">
+    <h3 class="text-xl font-semibold text-gray-800 mb-4">Sort By</h3>
+    <form action="/shop" method="GET">
+        <select name="sort" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-gray-700 text-sm">
+            <option value="popular">Popular</option>
+            <option value="newest">Newest</option>
+        </select>
+    </form>
+</div>
+
+<!-- Categories Section -->
+<div class="mb-12">
+    <h3 class="text-xl font-semibold text-gray-800 mb-4">Categories</h3>
+    <div class="space-y-4">
+        <a class="block text-lg font-medium text-gray-700 hover:text-indigo-600 transition-all" href="?category=new-collection">New Collection</a>
+        <a class="block text-lg font-medium text-gray-700 hover:text-indigo-600 transition-all" href="?category=all-products">All Products</a>
+        <a class="block text-lg font-medium text-gray-700 hover:text-indigo-600 transition-all" href="?category=discounted">Discounted Products</a>
+    </div>
+</div>
+
+<!-- Filters Section -->
+<div>
+    <h3 class="text-xl font-semibold text-gray-800 mb-4">Filter By</h3>
+    <div class="space-y-4">
+        <a class="block text-lg font-medium text-gray-700 hover:text-indigo-600 transition-all" href="?availability=in-stock">Availability</a>
+        <a class="block text-lg font-medium text-gray-700 hover:text-indigo-600 transition-all" href="?discount=true">Discount</a>
+    </div>
+</div>
+
     
     </div>
     

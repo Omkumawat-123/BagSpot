@@ -1,0 +1,79 @@
+<%- include('./partials/header') %>
+
+<!-- Profile Page Container -->
+<div class="max-w-5xl mx-auto my-12 px-6">
+
+    <!-- Profile Card -->
+    <div class="bg-white shadow-xl rounded-lg p-8 flex items-center space-x-6">
+        <!-- Profile Image -->
+        <img src="<%= user.picture ? user.picture : '/images/default.jpg' %>" alt="Profile Picture" 
+            class="w-28 h-28 rounded-full object-cover border-4 border-blue-500 shadow-md">
+
+        <!-- User Info -->
+        <div>
+            <h2 class="text-3xl font-bold text-gray-800"><%= user.fullname %></h2>
+            <p class="text-gray-600 text-lg"><%= user.email %></p>
+        </div>
+
+        <!-- Upload Profile Picture Form -->
+        <form action="/profile/upload" method="POST" enctype="multipart/form-data" class="ml-auto">
+            <input type="file" name="profilePic" class="hidden" id="fileInput">
+            <label for="fileInput" 
+                class="cursor-pointer px-6 py-2 bg-blue-600 text-white rounded-lg shadow-md text-lg font-semibold 
+                hover:bg-blue-700 transition duration-300 ease-in-out">
+                Upload Picture
+            </label>
+            <button type="submit" class="ml-3 px-5 py-2 bg-green-600 text-white rounded-lg shadow-md 
+                hover:bg-green-700 transition duration-300 ease-in-out">
+                Save
+            </button>
+        </form>
+    </div>
+
+    <!-- Other Sections: Cart & Orders -->
+    <div class="mt-8 space-y-6">
+        <!-- Cart Section -->
+        <div class="bg-white shadow-xl rounded-lg p-6">
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">🛒 Cart Items</h3>
+            <div class="border-t border-gray-300 pt-4">
+                <% if (user.cart.length > 0) { %>
+                    <% user.cart.forEach(item => { %>
+                        <div class="flex justify-between py-3 border-b">
+                            <span class="text-gray-700 text-lg font-medium"><%= item.name %></span>
+                            <span class="text-gray-900 font-semibold">$<%= item.price %></span>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <p class="text-gray-500 text-lg">Your cart is empty.</p>
+                <% } %>
+            </div>
+        </div>
+
+        <!-- Orders Section -->
+        <div class="bg-white shadow-xl rounded-lg p-6">
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">📦 Orders</h3>
+            <div class="border-t border-gray-300 pt-4">
+                <% if (user.orders.length > 0) { %>
+                    <% user.orders.forEach(order => { %>
+                        <div class="py-3 border-b text-gray-700 text-lg font-medium">
+                            Order ID: <span class="text-blue-600 font-semibold"><%= order %></span>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <p class="text-gray-500 text-lg">No orders placed yet.</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Home Button -->
+    <div class="text-center mt-8">
+        <a href="/shop" class="px-8 py-3 bg-blue-600 text-white rounded-lg shadow-md text-lg font-semibold 
+            hover:bg-blue-700 transition duration-300 ease-in-out">
+            ⬅ Back to Shop
+        </a>
+    </div>
+
+</div>
+
+<%- include('./partials/footer') %>

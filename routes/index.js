@@ -11,17 +11,50 @@ router.get("/", function (req, res) {
     res.render("index", { error, loggedIn:false });
 });
 
-router.get("/shop",isLoggedIn, async function (req, res) {
-    try {    
-        let products = await productModel.find()
-        let success=req.flash("success")
-        // Pass products to the shop page
-        res.render("shop", { products,success });
+router.get("/shop", isLoggedIn, async function (req, res) {
+    try {
+        const { sort, category, availability, discount } = req.query;
+
+        // Define filter conditions
+        let filterConditions = {};
+
+        // Apply category filter
+        if (category && category !== 'all-products') {
+            filterConditions.category = category;  // Filtering based on category
+        }
+
+        // Apply availability filter (in-stock)
+        if (availability === 'in-stock') {
+            filterConditions.stock = { $gt: 0 };  // Only show products with stock > 0
+        }
+
+        // Apply discount filter (filter products that have a discount)
+        if (discount === 'true') {
+            filterConditions.discount = { $gt: 0 };  // Filter for products that have a discount
+        }
+
+        // Define sorting condition
+        let sortCondition = {};
+        if (sort === 'newest') {
+            sortCondition = { createdAt: -1 };  // Assuming 'createdAt' is a field for when the product was added
+        } else if (sort === 'popular') {
+            sortCondition = { popularity: -1 };  // Assuming 'popularity' is a field for sorting popular products
+        }
+
+        // Fetch the filtered and sorted products
+        let products = await productModel.find(filterConditions).sort(sortCondition);
+
+        // Success message
+        let success = req.flash("success");
+
+        // Render the products on the shop page
+        res.render("shop", { products, success });
     } catch (error) {
         console.log(error);
         res.status(500).send("Server Error");
     }
 });
+
 
 router.get("/AddToCart/:productid", isLoggedIn, async function (req, res) {
     try {    
@@ -72,12 +105,12 @@ router.get("/cart/remove/:productid", isLoggedIn, async function (req, res) {
             
             // Recalculate total price and item count
             let totalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-            let totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+            let totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);  // Fix: define totalItems
             
             // Update the user's cart in the database
             user.cart = cart;
             user.cartTotalPrice = totalPrice; // Assuming you want to store total price
-            user.cartTotalItems = totalItems; // Assuming you want to store total items count
+            user.cartTotalItems = totalItems; // Store total items count
             await user.save();
             res.redirect("/cart");
 
@@ -96,6 +129,23 @@ router.get("/cart/remove/:productid", isLoggedIn, async function (req, res) {
         res.status(500).send("Server error");
     }
 });
+
+router.get("/profile", isLoggedIn, async (req, res) => {
+    try {
+        let user = await userModel.findOne({ email: req.user.email }).populate("cart");
+        if (!user) {
+            return res.status(404).send("User not found");
+        }
+        res.render("profile", { user });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Server error");
+    }
+});
+
+
+
+
 
 
  
