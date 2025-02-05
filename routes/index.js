@@ -4,10 +4,11 @@ const router = express.Router();
 const isLoggedIn = require("../middlewares/isLoggedIn");
 const productModel= require("../models/product-model"); 
 const userModel= require("../models/user-model");
+const upload = require("../config/multer-config");
 
 router.get("/", function (req, res) {
     let error = req.flash("error");
-    let success=req.flash("success")
+    let success=req.flash("success");
     res.render("index", { error, loggedIn:false });
 });
 
@@ -136,19 +137,35 @@ router.get("/profile", isLoggedIn, async (req, res) => {
         if (!user) {
             return res.status(404).send("User not found");
         }
-        res.render("profile", { user });
+        res.render('profile', { 
+            user, 
+            messages: req.flash()  // Pass flash messages to the template
+        });
     } catch (error) {
         console.error(error);
         res.status(500).send("Server error");
     }
 });
 
+router.post('/profile/upload', isLoggedIn, upload.single('profilePic'), async (req, res) => {
+    try {
+        if (req.file) {
+            // Convert image to Base64 and update user profile
+            await userModel.findByIdAndUpdate(req.user.id, { 
+                picture: `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}` 
+            });
+        }
 
+        // Store success message using flash
+        req.flash('success', 'Profile picture updated successfully!');
+        res.redirect('/profile');
+    } catch (error) {
+        console.error(error);
+        req.flash('error', 'Something went wrong! Please try again.');
+        res.redirect('/profile');
+    }
+});
 
-
-
-
- 
 
 
 module.exports = router;

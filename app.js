@@ -24,8 +24,9 @@ app.use(session({
 }));
 
 app.use(flash());
-app.use(express.static(path.join(__dirname,"public")));
 app.set("view engine","ejs");
+app.use(express.static(path.join(__dirname,"public")));
+
 
 app.use("/", index)
 app.use("/owners", ownersRouter);   // owners releted rountes => routes/ownersRouter file madhe share zalet 
